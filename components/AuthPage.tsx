@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, ArrowRight, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { api } from '../services/api';
 
@@ -18,6 +18,9 @@ const AuthPage: React.FC<AuthPageProps> = ({ onBack, onLoginSuccess }) => {
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [isGoogleScriptLoaded, setIsGoogleScriptLoaded] = useState(false);
+  
+  // Use a ref for the Google button container to calculate width dynamically
+  const googleBtnRef = useRef<HTMLDivElement>(null);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -87,7 +90,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onBack, onLoginSuccess }) => {
 
   // Initialization for Real Google Sign-In
   useEffect(() => {
-    if (CLIENT_ID && isGoogleScriptLoaded && view !== 'FORGOT_PASSWORD') {
+    if (CLIENT_ID && isGoogleScriptLoaded && view !== 'FORGOT_PASSWORD' && googleBtnRef.current) {
         try {
             google.accounts.id.initialize({
                 client_id: CLIENT_ID,
@@ -97,21 +100,23 @@ const AuthPage: React.FC<AuthPageProps> = ({ onBack, onLoginSuccess }) => {
                 context: view === 'LOGIN' ? 'signin' : 'signup'
             });
             
-            const buttonDiv = document.getElementById("googleSignInDiv");
-            if (buttonDiv) {
-                buttonDiv.innerHTML = '';
-                google.accounts.id.renderButton(
-                    buttonDiv,
-                    { 
-                        theme: "outline", 
-                        size: "large", 
-                        width: "400", 
-                        text: view === 'LOGIN' ? "signin_with" : "signup_with",
-                        logo_alignment: "left",
-                        shape: "rectangular"
-                    } 
-                );
-            }
+            // Clear previous button content
+            googleBtnRef.current.innerHTML = '';
+            
+            // Get exact container width to ensure full-width rendering (subtracting border/padding adjustments if needed, but clientWidth should work)
+            const containerWidth = googleBtnRef.current.clientWidth;
+            
+            google.accounts.id.renderButton(
+                googleBtnRef.current,
+                { 
+                    theme: "outline", 
+                    size: "large", 
+                    width: containerWidth, 
+                    text: view === 'LOGIN' ? "signin_with" : "signup_with",
+                    logo_alignment: "left",
+                    shape: "pill"
+                } 
+            );
         } catch (error) {
             console.error("Error initializing Google Sign-In", error);
         }
@@ -199,7 +204,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onBack, onLoginSuccess }) => {
           className="w-full h-full object-cover animate-zoom-slow"
         />
         <div className="absolute inset-0 z-20 flex flex-col justify-between p-16">
-            <div className="bg-white/90 backdrop-blur-sm p-4 rounded-sm inline-block self-start">
+            <div className="bg-white/90 backdrop-blur-sm p-4 rounded-xl inline-block self-start">
                <img 
                 src="/logo.png" 
                 alt="Stories by TJ" 
@@ -227,185 +232,201 @@ const AuthPage: React.FC<AuthPageProps> = ({ onBack, onLoginSuccess }) => {
       </div>
 
       {/* Right Split / Form Area */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 lg:p-24 relative bg-white">
+      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 lg:p-24 relative bg-zinc-50 overflow-hidden">
         
+        {/* Subtle Noise Texture */}
+        <div className="absolute inset-0 opacity-[0.4] pointer-events-none" 
+            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}>
+        </div>
+
+        {/* Large Watermark */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0">
+             <span className="font-serif font-bold text-[200px] xl:text-[300px] text-zinc-900/[0.03] leading-none whitespace-nowrap">
+                {view === 'LOGIN' ? 'STORIES' : view === 'SIGNUP' ? 'CREATE' : 'RESET'}
+            </span>
+        </div>
+
         {/* Back Button */}
         <button 
             onClick={onBack}
-            className="absolute top-8 right-8 lg:top-12 lg:right-12 flex items-center text-zinc-400 hover:text-brand-600 transition-colors group"
+            className="absolute top-8 right-8 lg:top-12 lg:right-12 flex items-center text-zinc-400 hover:text-brand-600 transition-colors group z-20"
         >
             <span className="text-xs uppercase tracking-widest mr-2 group-hover:-translate-x-1 transition-transform font-medium">Return Home</span>
             <ArrowLeft className="w-4 h-4 rotate-180" />
         </button>
 
-        <div className="w-full max-w-md animate-fade-in-up">
-            <div className="mb-10 text-center lg:text-left">
-                <h2 className="text-brand-600 tracking-widest text-sm uppercase font-semibold mb-2">
-                    Client Portal
-                </h2>
-                <h3 className="text-3xl md:text-4xl font-serif text-black mb-6">
-                    {view === 'LOGIN' ? 'Welcome Back' : view === 'SIGNUP' ? 'Join Stories by TJ' : 'Reset Password'}
-                </h3>
-                <div className="h-[1px] w-[55px] bg-[#C62828] mb-8 mx-auto lg:mx-0"></div>
+        <div className="w-full max-w-md animate-fade-in-up relative z-10">
+            {/* Rounder Card Wrapper */}
+            <div className="bg-white/90 backdrop-blur-2xl border border-zinc-200 p-10 md:p-12 shadow-[0_0_50px_rgba(0,0,0,0.05)] rounded-3xl">
                 
-                <p className="text-zinc-600 text-sm font-light leading-relaxed">
-                    {view === 'LOGIN' ? 'Enter your credentials to access your personal gallery and bookings.' : 
-                     view === 'SIGNUP' ? 'Create an account to begin your journey with us.' :
-                     'Enter your registered email address to receive a password reset link.'}
-                </p>
-            </div>
-
-            {/* Error / Success Messages */}
-            {error && (
-                <div className="mb-6 bg-brand-50 border border-brand-100 p-4 flex items-start space-x-3">
-                    <AlertCircle className="w-5 h-5 text-brand-600 shrink-0 mt-0.5" />
-                    <p className="text-sm text-brand-900">{error}</p>
+                <div className="mb-10 text-center">
+                    <h2 className="text-brand-600 tracking-widest text-xs uppercase font-semibold mb-3">
+                        Client Portal
+                    </h2>
+                    <h3 className="text-3xl font-serif text-black mb-4">
+                        {view === 'LOGIN' ? 'Welcome Back' : view === 'SIGNUP' ? 'Join Stories by TJ' : 'Reset Password'}
+                    </h3>
+                    <div className="h-[1px] w-[40px] bg-[#C62828] mx-auto mb-6"></div>
+                    
+                    <p className="text-zinc-600 text-sm font-light leading-relaxed">
+                        {view === 'LOGIN' ? 'Enter your credentials to access your personal gallery and bookings.' : 
+                        view === 'SIGNUP' ? 'Create an account to begin your journey with us.' :
+                        'Enter your registered email address to receive a password reset link.'}
+                    </p>
                 </div>
-            )}
-            {successMsg && (
-                <div className="mb-6 bg-green-50 border border-green-100 p-4 flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
-                    <p className="text-sm text-green-900">{successMsg}</p>
-                </div>
-            )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-                
-                {view === 'SIGNUP' && (
-                    <div className="group">
-                        <label className="block text-xs uppercase tracking-widest text-zinc-600 mb-2 font-semibold">Full Name</label>
-                        <input 
-                            type="text"
-                            required={view === 'SIGNUP'} 
-                            value={formData.name}
-                            onChange={(e) => setFormData({...formData, name: e.target.value})}
-                            className="w-full bg-zinc-50 border border-zinc-300 text-black p-4 focus:border-brand-600 outline-none transition-colors placeholder:text-zinc-400"
-                            placeholder="John Doe"
-                        />
+                {/* Error / Success Messages */}
+                {error && (
+                    <div className="mb-6 bg-red-50 border border-red-100 p-3 flex items-start space-x-3 rounded-xl">
+                        <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                        <p className="text-xs text-red-900 leading-relaxed">{error}</p>
+                    </div>
+                )}
+                {successMsg && (
+                    <div className="mb-6 bg-green-50 border border-green-100 p-3 flex items-start space-x-3 rounded-xl">
+                        <CheckCircle className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
+                        <p className="text-xs text-green-900 leading-relaxed">{successMsg}</p>
                     </div>
                 )}
 
-                {(view === 'LOGIN' || view === 'SIGNUP') && (
-                    <>
+                <form onSubmit={handleSubmit} className="space-y-5">
+                    
+                    {view === 'SIGNUP' && (
                         <div className="group">
-                            <label className="block text-xs uppercase tracking-widest text-zinc-600 mb-2 font-semibold">Email Address</label>
+                            <label className="block text-[10px] uppercase tracking-widest text-zinc-500 mb-1.5 font-bold">Full Name</label>
+                            <input 
+                                type="text"
+                                required={view === 'SIGNUP'} 
+                                value={formData.name}
+                                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                className="w-full bg-white border border-zinc-300 text-black p-3.5 focus:border-black outline-none transition-all placeholder:text-zinc-400 rounded-xl font-light"
+                                placeholder="John Doe"
+                            />
+                        </div>
+                    )}
+
+                    {(view === 'LOGIN' || view === 'SIGNUP') && (
+                        <>
+                            <div className="group">
+                                <label className="block text-[10px] uppercase tracking-widest text-zinc-500 mb-1.5 font-bold">Email Address</label>
+                                <input 
+                                    type="email" 
+                                    required
+                                    value={formData.email}
+                                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                    className="w-full bg-white border border-zinc-300 text-black p-3.5 focus:border-black outline-none transition-all placeholder:text-zinc-400 rounded-xl font-light"
+                                    placeholder="name@example.com"
+                                />
+                            </div>
+
+                            <div className="group">
+                                <label className="block text-[10px] uppercase tracking-widest text-zinc-500 mb-1.5 font-bold">Password</label>
+                                <input 
+                                    type="password" 
+                                    required
+                                    value={formData.password}
+                                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                                    className="w-full bg-white border border-zinc-300 text-black p-3.5 focus:border-black outline-none transition-all placeholder:text-zinc-400 rounded-xl font-light"
+                                    placeholder="••••••••"
+                                />
+                            </div>
+                        </>
+                    )}
+
+                    {view === 'FORGOT_PASSWORD' && (
+                        <div className="group">
+                            <label className="block text-[10px] uppercase tracking-widest text-zinc-500 mb-1.5 font-bold">Registered Email</label>
                             <input 
                                 type="email" 
                                 required
-                                value={formData.email}
-                                onChange={(e) => setFormData({...formData, email: e.target.value})}
-                                className="w-full bg-zinc-50 border border-zinc-300 text-black p-4 focus:border-brand-600 outline-none transition-colors placeholder:text-zinc-400"
+                                value={resetEmail}
+                                onChange={(e) => setResetEmail(e.target.value)}
+                                className="w-full bg-white border border-zinc-300 text-black p-3.5 focus:border-black outline-none transition-all placeholder:text-zinc-400 rounded-xl font-light"
                                 placeholder="name@example.com"
                             />
                         </div>
+                    )}
 
-                        <div className="group">
-                            <label className="block text-xs uppercase tracking-widest text-zinc-600 mb-2 font-semibold">Password</label>
-                            <input 
-                                type="password" 
-                                required
-                                value={formData.password}
-                                onChange={(e) => setFormData({...formData, password: e.target.value})}
-                                className="w-full bg-zinc-50 border border-zinc-300 text-black p-4 focus:border-brand-600 outline-none transition-colors placeholder:text-zinc-400"
-                                placeholder="••••••••"
-                            />
+                    {view === 'LOGIN' && (
+                        <div className="flex justify-end">
+                            <button 
+                                type="button"
+                                onClick={() => switchView('FORGOT_PASSWORD')}
+                                className="text-xs text-zinc-400 hover:text-brand-600 transition-colors font-medium hover:underline"
+                            >
+                                Forgot Password?
+                            </button>
+                        </div>
+                    )}
+
+                    <button 
+                        type="submit" 
+                        disabled={isLoading}
+                        className="w-full bg-black text-white py-4 uppercase tracking-widest font-bold text-xs hover:bg-brand-600 transition-all flex items-center justify-center space-x-2 group disabled:opacity-70 disabled:cursor-not-allowed shadow-none hover:shadow-lg mt-6 rounded-xl"
+                    >
+                        {isLoading ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                            <>
+                                <span>
+                                    {view === 'LOGIN' ? 'Sign In' : 
+                                    view === 'SIGNUP' ? 'Create Account' : 
+                                    'Send Reset Link'}
+                                </span>
+                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            </>
+                        )}
+                    </button>
+                </form>
+
+                {view !== 'FORGOT_PASSWORD' && (
+                    <>
+                        <div className="relative my-8">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-zinc-200"></div>
+                            </div>
+                            <div className="relative flex justify-center text-[10px] uppercase tracking-widest">
+                                <span className="bg-white/80 backdrop-blur-sm px-2 text-zinc-400 font-medium">Or continue with</span>
+                            </div>
+                        </div>
+
+                        <div ref={googleBtnRef} className="w-full flex justify-center min-h-[44px]">
+                           {/* Google Button Injected Here via API */}
                         </div>
                     </>
                 )}
 
-                {view === 'FORGOT_PASSWORD' && (
-                    <div className="group">
-                        <label className="block text-xs uppercase tracking-widest text-zinc-600 mb-2 font-semibold">Registered Email</label>
-                        <input 
-                            type="email" 
-                            required
-                            value={resetEmail}
-                            onChange={(e) => setResetEmail(e.target.value)}
-                            className="w-full bg-zinc-50 border border-zinc-300 text-black p-4 focus:border-brand-600 outline-none transition-colors placeholder:text-zinc-400"
-                            placeholder="name@example.com"
-                        />
-                    </div>
-                )}
-
-                {view === 'LOGIN' && (
-                    <div className="flex justify-end">
-                        <button 
-                            type="button"
-                            onClick={() => switchView('FORGOT_PASSWORD')}
-                            className="text-xs text-zinc-500 hover:text-brand-600 transition-colors font-medium underline"
-                        >
-                            Forgot Password?
-                        </button>
-                    </div>
-                )}
-
-                <button 
-                    type="submit" 
-                    disabled={isLoading}
-                    className="w-full bg-black text-white py-4 uppercase tracking-widest font-semibold hover:bg-brand-600 transition-all flex items-center justify-center space-x-2 group disabled:opacity-70 disabled:cursor-not-allowed mt-4 shadow-lg"
-                >
-                    {isLoading ? (
-                        <Loader2 className="w-5 h-5 animate-spin" />
+                <div className="mt-8 text-center pt-4 border-t border-zinc-100">
+                    {view === 'LOGIN' ? (
+                        <p className="text-zinc-500 text-sm">
+                            Don't have an account? 
+                            <button 
+                                onClick={() => switchView('SIGNUP')}
+                                className="text-black hover:text-brand-600 font-bold transition-colors ml-1"
+                            >
+                                Sign Up
+                            </button>
+                        </p>
+                    ) : view === 'SIGNUP' ? (
+                        <p className="text-zinc-500 text-sm">
+                            Already have an account? 
+                            <button 
+                                onClick={() => switchView('LOGIN')}
+                                className="text-black hover:text-brand-600 font-bold transition-colors ml-1"
+                            >
+                                Log In
+                            </button>
+                        </p>
                     ) : (
-                        <>
-                            <span>
-                                {view === 'LOGIN' ? 'Sign In' : 
-                                 view === 'SIGNUP' ? 'Create Account' : 
-                                 'Send Reset Link'}
-                            </span>
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </>
-                    )}
-                </button>
-            </form>
-
-            {view !== 'FORGOT_PASSWORD' && (
-                <>
-                    <div className="relative my-10">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-zinc-200"></div>
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase tracking-widest">
-                            <span className="bg-white px-2 text-zinc-400 font-medium">Or continue with</span>
-                        </div>
-                    </div>
-
-                    <div id="googleSignInDiv" className="w-full flex justify-center min-h-[44px]">
-                       {/* Real Google Button will be injected here. */}
-                    </div>
-                </>
-            )}
-
-            <div className="mt-8 text-center">
-                {view === 'LOGIN' ? (
-                    <p className="text-zinc-600 text-sm font-medium">
-                        Don't have an account? 
-                        <button 
-                            onClick={() => switchView('SIGNUP')}
-                            className="text-black hover:text-brand-600 font-bold transition-colors border-b border-transparent hover:border-brand-600 ml-1"
-                        >
-                            Sign Up
-                        </button>
-                    </p>
-                ) : view === 'SIGNUP' ? (
-                    <p className="text-zinc-600 text-sm font-medium">
-                        Already have an account? 
                         <button 
                             onClick={() => switchView('LOGIN')}
-                            className="text-black hover:text-brand-600 font-bold transition-colors border-b border-transparent hover:border-brand-600 ml-1"
+                            className="text-zinc-400 hover:text-brand-600 text-xs font-bold uppercase tracking-widest flex items-center justify-center mx-auto space-x-1 transition-colors"
                         >
-                            Log In
+                            <ArrowLeft className="w-3 h-3" />
+                            <span>Back to Login</span>
                         </button>
-                    </p>
-                ) : (
-                    <button 
-                        onClick={() => switchView('LOGIN')}
-                        className="text-zinc-500 hover:text-brand-600 text-sm font-medium flex items-center justify-center mx-auto space-x-1"
-                    >
-                        <ArrowLeft className="w-3 h-3" />
-                        <span>Back to Login</span>
-                    </button>
-                )}
+                    )}
+                </div>
             </div>
         </div>
       </div>

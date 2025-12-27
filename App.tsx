@@ -53,7 +53,7 @@ const App: React.FC = () => {
         if (parsedUser.isAdmin) {
             setCurrentView('admin');
         } else {
-            setCurrentView('client');
+            setCurrentView('main');
         }
     }
   };
