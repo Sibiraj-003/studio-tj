@@ -12,17 +12,6 @@
     <script>
       tailwind.config = {
         theme: {
-          container: {
-            center: true,
-            padding: '1.5rem',
-            screens: {
-              sm: '640px',
-              md: '768px',
-              lg: '1024px',
-              xl: '1280px',
-              '2xl': '1536px',
-            },
-          },
           extend: {
             fontFamily: {
               serif: ['"Cormorant Garamond"', 'serif'],
@@ -40,7 +29,7 @@
               }
             },
             animation: {
-              'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+              'fade-in-up': 'fadeInUp 1s ease-out forwards',
               'reveal': 'reveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
               'scroll-left': 'scrollLeft 60s linear infinite',
               'scroll-right': 'scrollRight 60s linear infinite',
@@ -127,8 +116,10 @@
   }
 }
 </script>
+<link rel="stylesheet" href="/index.css">
 </head>
   <body class="bg-white text-zinc-900 antialiased selection:bg-brand-500 selection:text-white overflow-x-hidden">
     <div id="root"></div>
-  </body>
+  <script type="module" src="/index.tsx"></script>
+</body>
 </html>

@@ -1,27 +1,18 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import CategoryGrid from './components/CategoryGrid';
+import Hero from './components/Hero'; 
 import Portfolio from './components/Portfolio';
 import Services from './components/Services';
 import AiAssistant from './components/AiAssistant';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import AuthPage from './components/AuthPage';
+import BookingModal from './components/BookingModal';
+import AdminDashboard from './components/AdminDashboard';
+import ClientDashboard from './components/ClientDashboard';
 import { NavLink, ServicePackage } from './types';
-import { CheckCircle, Loader2 } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import { api, UserData } from './services/api';
-
-// Lazy Load Heavy Components
-const AuthPage = React.lazy(() => import('./components/AuthPage'));
-const BookingModal = React.lazy(() => import('./components/BookingModal'));
-const AdminDashboard = React.lazy(() => import('./components/AdminDashboard'));
-const ClientDashboard = React.lazy(() => import('./components/ClientDashboard'));
-
-const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-zinc-50">
-    <Loader2 className="w-8 h-8 animate-spin text-brand-600" />
-  </div>
-);
 
 const App: React.FC = () => {
   const [activeLink, setActiveLink] = useState<string>(NavLink.HOME);
@@ -48,10 +39,7 @@ const App: React.FC = () => {
     }
 
     // 2. Visit Counter Logic (via API Service)
-    // Defer this slightly to prioritize UI rendering
-    setTimeout(() => {
-        api.incrementVisits();
-    }, 2000);
+    api.incrementVisits();
   }, []);
 
   const handleLoginSuccess = () => {
@@ -160,12 +148,10 @@ const App: React.FC = () => {
 
   if (currentView === 'auth') {
     return (
-      <Suspense fallback={<LoadingFallback />}>
-        <AuthPage 
-            onBack={() => setCurrentView('main')} 
-            onLoginSuccess={handleLoginSuccess}
-        />
-      </Suspense>
+      <AuthPage 
+        onBack={() => setCurrentView('main')} 
+        onLoginSuccess={handleLoginSuccess}
+      />
     );
   }
 
@@ -188,9 +174,7 @@ const App: React.FC = () => {
   if (currentView === 'admin' && isAdmin) {
     return (
         <DashboardLayout>
-            <Suspense fallback={<LoadingFallback />}>
-                <AdminDashboard onBack={() => setCurrentView('main')} />
-            </Suspense>
+            <AdminDashboard onBack={() => setCurrentView('main')} />
         </DashboardLayout>
     );
   }
@@ -198,16 +182,14 @@ const App: React.FC = () => {
   if (currentView === 'client' && isLoggedIn && !isAdmin && user) {
     return (
         <DashboardLayout>
-            <Suspense fallback={<LoadingFallback />}>
-                <ClientDashboard user={user} onBack={() => setCurrentView('main')} />
-            </Suspense>
+            <ClientDashboard user={user} onBack={() => setCurrentView('main')} />
         </DashboardLayout>
     );
   }
 
   // MAIN VIEW
   return (
-    <div className="bg-white min-h-screen relative overflow-x-hidden">
+    <div className="bg-white min-h-screen relative">
       <Navbar 
         activeLink={activeLink} 
         scrollToSection={scrollToSection} 
@@ -219,9 +201,6 @@ const App: React.FC = () => {
       />
       <main>
         <Hero scrollToSection={scrollToSection} />
-        {/* Components below the fold don't need Suspense/Lazy as they are standard imports, 
-            but images within them will be lazy loaded via their components */}
-        <CategoryGrid />
         <Portfolio />
         <AiAssistant />
         <Services scrollToSection={scrollToSection} onBook={handleBookClick} />
@@ -229,18 +208,14 @@ const App: React.FC = () => {
       </main>
       <Footer />
 
-      {/* Booking Modal - Lazy Loaded */}
-      <Suspense fallback={null}>
-        {isBookingModalOpen && (
-            <BookingModal 
-                isOpen={isBookingModalOpen}
-                onClose={() => setIsBookingModalOpen(false)}
-                selectedPackage={selectedPackage}
-                currentUser={user}
-                onConfirm={handleBookingConfirm}
-            />
-        )}
-      </Suspense>
+      {/* Booking Modal */}
+      <BookingModal 
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+        selectedPackage={selectedPackage}
+        currentUser={user}
+        onConfirm={handleBookingConfirm}
+      />
 
       {/* Success Toast */}
       {showToast && (
