@@ -25,21 +25,19 @@ const Services: React.FC<ServicesProps> = ({ scrollToSection, onBook }) => {
     const elements = document.querySelectorAll('.reveal-on-scroll');
     elements.forEach(el => observer.observe(el));
 
-    // Parallax logic for watermark and background
+    // Parallax logic
     const handleScroll = () => {
       const scrolled = window.scrollY;
       if (watermarkRef.current) {
-        // Move text horizontally based on scroll
         watermarkRef.current.style.transform = `translateX(${scrolled * -0.1}px)`;
       }
       if (bgImageRef.current) {
-        // Subtle vertical parallax for the camera background
         const offset = scrolled * 0.02;
         bgImageRef.current.style.transform = `translate3d(0, ${offset}px, 0) scale(1.1)`;
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
       observer.disconnect();
@@ -593,14 +591,15 @@ const Services: React.FC<ServicesProps> = ({ scrollToSection, onBook }) => {
   const currentPackages = packagesData[activeCategory] || [];
 
   return (
-    <section id={NavLink.SERVICES} className="py-32 bg-zinc-50 relative overflow-hidden">
+    <section id={NavLink.SERVICES} className="py-24 md:py-32 bg-zinc-50 relative overflow-hidden">
       
       {/* Camera Background Image Layer */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <img 
             ref={bgImageRef}
-            src="https://images.unsplash.com/photo-1502982720700-bfff97f2ecac?q=80&w=2070&auto=format&fit=crop" 
+            src="https://images.unsplash.com/photo-1502982720700-bfff97f2ecac?q=80&w=1200&auto=format&fit=crop" 
             alt="Vintage Camera Background" 
+            loading="lazy"
             className="w-full h-full object-cover opacity-[0.03] grayscale will-change-transform origin-center"
         />
       </div>
@@ -617,7 +616,7 @@ const Services: React.FC<ServicesProps> = ({ scrollToSection, onBook }) => {
         ref={watermarkRef}
         className="absolute top-40 left-0 whitespace-nowrap opacity-5 pointer-events-none select-none will-change-transform z-0"
       >
-        <span className="text-[140px] md:text-[200px] font-serif font-bold text-brand-600 leading-none">PACKAGES</span>
+        <span className="text-[80px] md:text-[200px] font-serif font-bold text-brand-600 leading-none">PACKAGES</span>
       </div>
 
       <div className="container mx-auto px-6 relative z-10 max-w-7xl">
@@ -632,12 +631,12 @@ const Services: React.FC<ServicesProps> = ({ scrollToSection, onBook }) => {
 
         {/* Category Tabs */}
         <div className="flex justify-center mb-16 reveal-on-scroll">
-            <div className="inline-flex bg-white p-1.5 rounded-full border border-zinc-200 shadow-sm flex-wrap justify-center">
+            <div className="inline-flex flex-wrap justify-center bg-white p-2 rounded-2xl md:rounded-full border border-zinc-200 shadow-sm gap-2 w-full md:w-auto">
                 {categories.map((cat) => (
                     <button
                         key={cat.id}
                         onClick={() => setActiveCategory(cat.id)}
-                        className={`px-6 py-3 rounded-full text-sm font-bold uppercase tracking-widest transition-all duration-300 flex items-center space-x-2 ${
+                        className={`px-4 py-2 md:px-6 md:py-3 rounded-full text-xs md:text-sm font-bold uppercase tracking-widest transition-all duration-300 flex items-center space-x-2 flex-grow md:flex-grow-0 justify-center ${
                             activeCategory === cat.id 
                             ? 'bg-brand-600 text-white shadow-md' 
                             : 'text-zinc-500 hover:text-black hover:bg-zinc-50'

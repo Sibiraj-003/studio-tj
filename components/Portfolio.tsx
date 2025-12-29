@@ -35,9 +35,13 @@ const PolaroidCard: React.FC<{ photo: PhotoItem; rotation?: number }> = ({ photo
     >
       <div className="aspect-[4/5] bg-zinc-100 overflow-hidden relative mb-4">
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+        {/* Optimized Image: Reduced width to 500px, added lazy loading, and explicit dimensions */}
         <img 
           src={photo.url} 
           alt={photo.title}
+          loading="lazy"
+          width="300"
+          height="375"
           className="w-full h-full object-cover filter saturate-[0.85] group-hover:saturate-100 contrast-125 transition-all duration-500 group-hover:scale-110"
         />
       </div>
@@ -69,32 +73,36 @@ const Portfolio: React.FC = () => {
     return () => observer.disconnect();
   }, [filter]);
 
+  // Updated Photos Array with Optimized URLs (w=500)
   const photos: PhotoItem[] = [
-    { id: 1, url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop', category: 'portrait', title: 'Ethereal Gaze' },
-    { id: 2, url: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000&auto=format&fit=crop', category: 'wedding', title: 'First Dance' },
-    { id: 3, url: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1000&auto=format&fit=crop', category: 'fashion', title: 'Urban Chic' },
-    { id: 4, url: 'https://images.unsplash.com/photo-1511285560982-1356c11d4606?q=80&w=1000&auto=format&fit=crop', category: 'wedding', title: 'Forest Vows' },
-    { id: 5, url: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1000&auto=format&fit=crop', category: 'portrait', title: 'Golden Hour' },
-    { id: 6, url: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop', category: 'fashion', title: 'High Contrast' },
-    { id: 7, url: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1000&auto=format&fit=crop', category: 'fashion', title: 'Neon Nights' },
-    { id: 8, url: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=1000&auto=format&fit=crop', category: 'wedding', title: 'Eternal Promise' },
-    { id: 9, url: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=1000&auto=format&fit=crop', category: 'portrait', title: 'Soulful Eyes' },
-    { id: 10, url: 'https://images.unsplash.com/photo-1529139574466-a302d27f60d0?q=80&w=1000&auto=format&fit=crop', category: 'fashion', title: 'Avant Garde' },
-    { id: 11, url: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1000&auto=format&fit=crop', category: 'wedding', title: 'Candid Joy' },
-    { id: 12, url: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop', category: 'portrait', title: 'Monochrome Dream' },
+    { id: 1, url: 'https://images.unsplash.com/photo-1621621667797-e06afc210438?q=80&w=500&auto=format&fit=crop', category: 'wedding', title: 'Village Romance' },
+    { id: 2, url: 'https://images.unsplash.com/photo-1605270012917-bf157c5a9541?q=80&w=500&auto=format&fit=crop', category: 'wedding', title: 'Reception Glow' },
+    { id: 3, url: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=500&auto=format&fit=crop', category: 'wedding', title: 'Timeless' },
+    { id: 4, url: 'https://images.unsplash.com/photo-1602693828784-7e9b25208f23?q=80&w=500&auto=format&fit=crop', category: 'wedding', title: 'Bridal Details' },
+    { id: 5, url: 'https://images.unsplash.com/photo-1617112836270-b82736e4b859?q=80&w=500&auto=format&fit=crop', category: 'puberty', title: 'Coming of Age' },
+    { id: 6, url: 'https://images.unsplash.com/photo-1563178406-4cdc2923acbc?q=80&w=500&auto=format&fit=crop', category: 'maternity', title: 'Waiting for You' },
+    { id: 7, url: 'https://images.unsplash.com/photo-1583934555026-63b5b4368b35?q=80&w=500&auto=format&fit=crop', category: 'wedding', title: 'The Moment' },
+    { id: 8, url: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?q=80&w=500&auto=format&fit=crop', category: 'baby', title: 'Pure Joy' },
+    { id: 9, url: 'https://images.unsplash.com/photo-1596386461350-326256f8e77e?q=80&w=500&auto=format&fit=crop', category: 'wedding', title: 'The Groom' },
+    { id: 10, url: 'https://images.unsplash.com/photo-1610255309322-1d528b17b252?q=80&w=500&auto=format&fit=crop', category: 'puberty', title: 'Grace' },
+    { id: 11, url: 'https://images.unsplash.com/photo-1625482319089-94b63e843810?q=80&w=500&auto=format&fit=crop', category: 'portrait', title: 'Family Bonds' },
+    { id: 12, url: 'https://images.unsplash.com/photo-1611082672322-c23d9070394e?q=80&w=500&auto=format&fit=crop', category: 'baby', title: 'Little Boss' },
+    { id: 13, url: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=500&auto=format&fit=crop', category: 'wedding', title: 'First Dance' },
+    { id: 14, url: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=500&auto=format&fit=crop', category: 'wedding', title: 'Eternal Promise' },
   ];
 
-  const categories = ['all', 'portrait', 'wedding', 'fashion'];
+  const categories = ['all', 'wedding', 'puberty', 'maternity', 'baby', 'portrait'];
   const filteredPhotos = filter === 'all' ? photos : photos.filter(p => p.category === filter);
 
   // Helper to ensure we have enough items for the marquee to scroll smoothly without gaps
   const getMarqueeItems = (items: PhotoItem[]) => {
     if (items.length === 0) return [];
     let result = [...items];
+    // Duplicate until we have at least 8 items for a smooth loop
     while (result.length < 8) {
       result = [...result, ...items];
     }
-    return [...result, ...result, ...result];
+    return [...result, ...result];
   };
 
   const marqueeItems = getMarqueeItems(filteredPhotos);
@@ -106,23 +114,23 @@ const Portfolio: React.FC = () => {
       
       {/* Decorative Text Behind */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 opacity-5 pointer-events-none whitespace-nowrap select-none">
-        <span className="text-[140px] md:text-[200px] font-serif font-bold text-zinc-900 leading-none">CAPTURED</span>
+        <span className="text-[100px] md:text-[200px] font-serif font-bold text-zinc-900 leading-none">CAPTURED</span>
       </div>
 
       <div className="container mx-auto px-6 mb-16">
-        <div className="flex flex-col md:flex-row justify-between items-end reveal-on-scroll">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end reveal-on-scroll">
           <div className="mb-8 md:mb-0">
             <h2 className="text-brand-600 tracking-widest text-sm uppercase font-semibold mb-2">Selected Works</h2>
             <h3 className="text-4xl md:text-5xl font-serif text-black">Visual Stories</h3>
             <div className="h-[1px] w-[55px] bg-[#C62828] mt-4"></div>
           </div>
           
-          <div className="flex space-x-6 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto">
+          <div className="flex space-x-6 overflow-x-auto pb-4 md:pb-0 w-full md:w-auto scrollbar-hide">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setFilter(cat)}
-                className={`uppercase text-xs tracking-[0.2em] transition-colors pb-1 border-b-2 font-medium ${
+                className={`uppercase text-xs tracking-[0.2em] transition-colors pb-1 border-b-2 font-medium whitespace-nowrap ${
                   filter === cat 
                   ? 'text-black border-brand-600' 
                   : 'text-zinc-500 border-transparent hover:text-black'
@@ -140,18 +148,13 @@ const Portfolio: React.FC = () => {
         
         {/* Row 1: Scroll Left */}
         <div className="relative w-full overflow-hidden group">
-            <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-zinc-50 to-transparent z-10 pointer-events-none"></div>
-            <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-zinc-50 to-transparent z-10 pointer-events-none"></div>
+            <div className="absolute inset-y-0 left-0 w-8 md:w-32 bg-gradient-to-r from-zinc-50 to-transparent z-10 pointer-events-none"></div>
+            <div className="absolute inset-y-0 right-0 w-8 md:w-32 bg-gradient-to-l from-zinc-50 to-transparent z-10 pointer-events-none"></div>
             
             <div className="flex w-max animate-scroll-left hover:[animation-play-state:paused] py-4">
                 <div className="flex">
                     {row1Items.map((photo, index) => (
-                        <PolaroidCard key={`r1-${index}`} photo={photo} rotation={index % 2 === 0 ? 2 : -2} />
-                    ))}
-                </div>
-                <div className="flex">
-                    {row1Items.map((photo, index) => (
-                        <PolaroidCard key={`r1-dup-${index}`} photo={photo} rotation={index % 2 === 0 ? 2 : -2} />
+                        <PolaroidCard key={`r1-${index}-${photo.id}`} photo={photo} rotation={index % 2 === 0 ? 2 : -2} />
                     ))}
                 </div>
             </div>
@@ -159,18 +162,13 @@ const Portfolio: React.FC = () => {
 
         {/* Row 2: Scroll Right */}
         <div className="relative w-full overflow-hidden group">
-             <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-zinc-50 to-transparent z-10 pointer-events-none"></div>
-             <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-zinc-50 to-transparent z-10 pointer-events-none"></div>
+             <div className="absolute inset-y-0 left-0 w-8 md:w-32 bg-gradient-to-r from-zinc-50 to-transparent z-10 pointer-events-none"></div>
+             <div className="absolute inset-y-0 right-0 w-8 md:w-32 bg-gradient-to-l from-zinc-50 to-transparent z-10 pointer-events-none"></div>
 
             <div className="flex w-max animate-scroll-right hover:[animation-play-state:paused] py-4">
                 <div className="flex">
                     {row2Items.map((photo, index) => (
-                        <PolaroidCard key={`r2-${index}`} photo={photo} rotation={index % 2 === 0 ? -1 : 3} />
-                    ))}
-                </div>
-                <div className="flex">
-                    {row2Items.map((photo, index) => (
-                        <PolaroidCard key={`r2-dup-${index}`} photo={photo} rotation={index % 2 === 0 ? -1 : 3} />
+                        <PolaroidCard key={`r2-${index}-${photo.id}`} photo={photo} rotation={index % 2 === 0 ? -1 : 3} />
                     ))}
                 </div>
             </div>
