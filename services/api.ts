@@ -493,6 +493,25 @@ export const api = {
       return offline.updateInquiry(id, { read: true });
   },
 
+  deleteInquiry: async (id: string) => {
+      if (db) {
+          try {
+              await deleteDoc(doc(db, "inquiries", id));
+              isCloudConnected = true;
+              return;
+          } catch (e) {
+              console.warn("System: Cloud deleteInquiry failed.");
+          }
+      }
+      // Offline/localStorage fallback
+      await delay(300);
+      const inquiriesStr = localStorage.getItem('tj_studio_inquiries');
+      let inquiries = inquiriesStr ? JSON.parse(inquiriesStr) : [];
+      inquiries = inquiries.filter((i: any) => i.id !== id);
+      localStorage.setItem('tj_studio_inquiries', JSON.stringify(inquiries));
+      window.dispatchEvent(new Event('storage'));
+  },
+
   // 4. ANALYTICS
   incrementVisits: async () => {
       if (db) {

@@ -134,6 +134,16 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
       await api.markInquiryRead(id);
   };
 
+  const handleDeleteInquiry = async (id: string) => {
+    if (window.confirm("Are you sure you want to delete this message?")) {
+        setInquiries(prev => prev.filter(i => i.id !== id));
+        try {
+            await api.deleteInquiry(id);
+        } catch (error) {
+            alert("Failed to delete message. Please try again.");
+        }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-zinc-50 pt-24 pb-12 px-6">
@@ -422,10 +432,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
                                             {inquiry.message}
                                         </p>
                                     </div>
-                                    <div className="flex-shrink-0 flex items-start justify-end">
+                                    <div className="flex-shrink-0 flex flex-col items-end justify-end gap-2">
                                         <a href={`mailto:${inquiry.email}`} className="text-xs font-bold uppercase tracking-wide text-brand-600 hover:underline flex items-center">
                                             <Mail className="w-3 h-3 mr-1" /> Reply
                                         </a>
+                                        <button
+                                            className="mt-2 text-xs text-red-600 hover:bg-red-50 px-2 py-1 rounded flex items-center gap-1 border border-red-200"
+                                            onClick={e => { e.stopPropagation(); handleDeleteInquiry(inquiry.id); }}
+                                            title="Delete Message"
+                                        >
+                                            <Trash2 className="w-4 h-4" /> Delete
+                                        </button>
                                     </div>
                                 </div>
                             ))}
