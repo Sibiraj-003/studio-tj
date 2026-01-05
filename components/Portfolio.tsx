@@ -35,7 +35,6 @@ const PolaroidCard: React.FC<{ photo: PhotoItem; rotation?: number }> = ({ photo
     >
       <div className="aspect-[4/5] bg-zinc-100 overflow-hidden relative mb-4">
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-        {/* Optimized Image: Reduced width to 500px, added lazy loading, and explicit dimensions */}
         <img 
           src={photo.url} 
           alt={photo.title}
@@ -75,20 +74,19 @@ const Portfolio: React.FC = () => {
 
   // Updated Photos Array with Optimized URLs (w=500)
   const photos: PhotoItem[] = [
-    { id: 1, url: 'https://images.unsplash.com/photo-1621621667797-e06afc210438?q=80&w=500&auto=format&fit=crop', category: 'wedding', title: 'Village Romance' },
-    { id: 2, url: 'https://images.unsplash.com/photo-1605270012917-bf157c5a9541?q=80&w=500&auto=format&fit=crop', category: 'wedding', title: 'Reception Glow' },
-    { id: 3, url: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=500&auto=format&fit=crop', category: 'wedding', title: 'Timeless' },
-    { id: 4, url: 'https://images.unsplash.com/photo-1602693828784-7e9b25208f23?q=80&w=500&auto=format&fit=crop', category: 'wedding', title: 'Bridal Details' },
-    { id: 5, url: 'https://images.unsplash.com/photo-1617112836270-b82736e4b859?q=80&w=500&auto=format&fit=crop', category: 'puberty', title: 'Coming of Age' },
-    { id: 6, url: 'https://images.unsplash.com/photo-1563178406-4cdc2923acbc?q=80&w=500&auto=format&fit=crop', category: 'maternity', title: 'Waiting for You' },
-    { id: 7, url: 'https://images.unsplash.com/photo-1583934555026-63b5b4368b35?q=80&w=500&auto=format&fit=crop', category: 'wedding', title: 'The Moment' },
-    { id: 8, url: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?q=80&w=500&auto=format&fit=crop', category: 'baby', title: 'Pure Joy' },
-    { id: 9, url: 'https://images.unsplash.com/photo-1596386461350-326256f8e77e?q=80&w=500&auto=format&fit=crop', category: 'wedding', title: 'The Groom' },
-    { id: 10, url: 'https://images.unsplash.com/photo-1610255309322-1d528b17b252?q=80&w=500&auto=format&fit=crop', category: 'puberty', title: 'Grace' },
-    { id: 11, url: 'https://images.unsplash.com/photo-1625482319089-94b63e843810?q=80&w=500&auto=format&fit=crop', category: 'portrait', title: 'Family Bonds' },
-    { id: 12, url: 'https://images.unsplash.com/photo-1611082672322-c23d9070394e?q=80&w=500&auto=format&fit=crop', category: 'baby', title: 'Little Boss' },
-    { id: 13, url: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=500&auto=format&fit=crop', category: 'wedding', title: 'First Dance' },
-    { id: 14, url: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=500&auto=format&fit=crop', category: 'wedding', title: 'Eternal Promise' },
+    { id: 1, url: '/Instapage/birthday.jpeg', category: 'Birthday', title: 'Birthday' },
+    { id: 2, url: '/Instapage/kids.jpeg', category: 'portrait', title: 'Kids Potrait' },
+    { id: 3, url: '/Instapage/babyshower.jpeg', category: 'Baby Shower', title: 'babyshower' },
+    { id: 4, url: '/Instapage/familyphoto.jpeg', category: 'Family Photo', title: 'Family Photo' },
+    { id: 5, url: '/Instapage/marriage.jpeg', category: 'Wedding', title: 'wedding' },
+    { id: 6, url: '/Instapage/bride.jpeg', category: 'Bride', title: 'bride' },
+    { id: 7, url: '/Instapage/marriage02.jpeg', category: 'Marriage', title: 'marriage' },
+    { id: 8, url: '/Instapage/kids03.jpeg', category: 'wedding', title: 'Wedding' },
+    { id: 9, url: '/Instapage/wedding03.jpeg', category: 'portrait', title: 'Soulful Eyes' },
+    { id: 10, url: '/Instapage/kids.jpeg', category: 'fashion', title: 'Avant Garde' }, 
+    { id: 11, url: '/Instapage/wedding04.jpeg', category: 'wedding', title: 'Candid Joy' },
+    { id: 12, url: '/Instapage/groom.jpeg', category: 'portrait', title: 'Monochrome Dream' },
+
   ];
 
   const categories = ['all', 'wedding', 'puberty', 'maternity', 'baby', 'portrait'];

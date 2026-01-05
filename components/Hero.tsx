@@ -56,7 +56,7 @@ const Hero: React.FC<HeroProps> = ({ scrollToSection }) => {
           src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1600&auto=format&fit=crop" 
           alt="Camera Lens Background" 
           className="w-full h-full object-cover opacity-[0.08] grayscale"
-          fetchPriority="high"
+          fetchPriority="high"  
           loading="eager"
           width="1600"
           height="900"

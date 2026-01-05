@@ -209,7 +209,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
              <div>
               <p className="text-xs text-zinc-500 uppercase tracking-widest font-semibold mb-1">Total Revenue</p>
               <p className="text-3xl font-serif text-black">
-                ${stats.totalRevenue.toLocaleString()}
+                ₹{stats.totalRevenue.toLocaleString()}
               </p>
             </div>
             <div className="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center">
