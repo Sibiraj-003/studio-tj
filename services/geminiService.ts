@@ -1,7 +1,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { AiConceptResult } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const ai = new GoogleGenAI({ apiKey: "" });
 
 export const generatePhotoConcept = async (userIdea: string): Promise<AiConceptResult | null> => {
   try {
