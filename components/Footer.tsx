@@ -6,9 +6,9 @@ const Footer: React.FC = () => {
     <footer className="bg-zinc-900 py-16 border-t border-zinc-800">
       <div className="container mx-auto px-6 flex flex-col items-center">
         {/* Logo Container - White background to ensure logo visibility */}
-        <div className="bg-white px-4 py-2 rounded-sm mb-8">
+        <div className=" px-4 py-2 rounded-sm mb-8">
           <img 
-            src="/logo.png" 
+            src="/logo2.png" 
             alt="Stories by TJ" 
             className="h-12 w-auto object-contain"
             onError={(e) => {
