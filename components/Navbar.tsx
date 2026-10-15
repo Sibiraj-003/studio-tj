@@ -19,7 +19,6 @@ const Navbar: React.FC<NavbarProps> = ({ activeLink, scrollToSection, onLoginCli
     { id: NavLink.HOME, label: 'Home' },
     { id: NavLink.PORTFOLIO, label: 'Portfolio' },
     { id: NavLink.AI_ADVISOR, label: 'AI Director' },
-    { id: NavLink.SERVICES, label: 'Services' },
     { id: NavLink.CONTACT, label: 'Contact' },
   ];
 
