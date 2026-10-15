@@ -2,7 +2,6 @@ import React, { useState, useEffect, Suspense, lazy } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Portfolio from "./components/Portfolio";
-import Services from "./components/Services";
 import AiAssistant from "./components/AiAssistant";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
@@ -445,7 +444,6 @@ const App: React.FC = () => {
         </section> */}
         <Portfolio />
         <AiAssistant />
-        <Services scrollToSection={scrollToSection} onBook={handleBookClick} />
         <Contact />
       </main>
       <Footer />
